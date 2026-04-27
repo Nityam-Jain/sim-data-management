@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const customerSchema = new mongoose.Schema({
   name: String,
   address: String,
@@ -9,6 +10,9 @@ const customerSchema = new mongoose.Schema({
   currentMonthDate: Date,
   nextMonthDate: Date,
   afterTwoMonthsDate: Date,
+
+  ninetyDaysDate: Date,
+  firstRechargeDate: Date,
 
   pending: String,
   extra1: String,
