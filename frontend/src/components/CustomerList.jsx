@@ -49,12 +49,11 @@ function CustomerList() {
     const filteredCustomers = customers.filter((c) => {
         const searchText = search.toLowerCase();
 
-        const matchSearch =
+        return (
             c.name?.toLowerCase().includes(searchText) ||
             c.mobile?.includes(search) ||
-            formatDate(c.ninetyDaysDate).includes(search);
-
-
+            formatDate(c.ninetyDaysDate).includes(search)
+        );
     });
 
     const handleDelete = async (id) => {
