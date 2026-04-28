@@ -48,48 +48,70 @@ const Customer = require("../models/Customer");
 
 
 // ADD
+// ================= ADD =================
 router.post("/add", async (req, res) => {
     try {
         const data = req.body;
 
         const customer = new Customer({
             ...data,
+
             currentMonthDate: data.currentMonthDate ? new Date(data.currentMonthDate) : null,
             nextMonthDate: data.nextMonthDate ? new Date(data.nextMonthDate) : null,
             afterTwoMonthsDate: data.afterTwoMonthsDate ? new Date(data.afterTwoMonthsDate) : null,
+
             ninetyDaysDate: data.ninetyDaysDate ? new Date(data.ninetyDaysDate) : null,
             firstRechargeDate: data.firstRechargeDate ? new Date(data.firstRechargeDate) : null,
+
+            // ✅ FIXED (price, not date)
+            lastRechargePrice: data.lastRechargePrice || "",
+
         });
 
         await customer.save();
         res.json(customer);
 
     } catch (err) {
+        console.error("ADD ERROR:", err);
         res.status(500).json({ error: err.message });
     }
 });
 
-// UPDATE (EDIT)
+
+// ================= UPDATE =================
 router.put("/update/:id", async (req, res) => {
     try {
         const data = req.body;
 
+        const updatedData = {
+            name: data.name || "",
+            address: data.address || "",
+            mobile: data.mobile || "",
+            altMobile: data.altMobile || "",
+            company: data.company || "",
+
+            currentMonthDate: data.currentMonthDate ? new Date(data.currentMonthDate) : null,
+            nextMonthDate: data.nextMonthDate ? new Date(data.nextMonthDate) : null,
+            afterTwoMonthsDate: data.afterTwoMonthsDate ? new Date(data.afterTwoMonthsDate) : null,
+
+            ninetyDaysDate: data.ninetyDaysDate ? new Date(data.ninetyDaysDate) : null,
+            firstRechargeDate: data.firstRechargeDate ? new Date(data.firstRechargeDate) : null,
+
+            pending: data.pending || "",
+            lastRechargePrice: data.lastRechargePrice || "",
+            extra2: data.extra2 || ""
+        };
+
         const updated = await Customer.findByIdAndUpdate(
             req.params.id,
-            {
-                ...data,
-                currentMonthDate: data.currentMonthDate ? new Date(data.currentMonthDate) : null,
-                nextMonthDate: data.nextMonthDate ? new Date(data.nextMonthDate) : null,
-                afterTwoMonthsDate: data.afterTwoMonthsDate ? new Date(data.afterTwoMonthsDate) : null,
-                ninetyDaysDate: data.ninetyDaysDate ? new Date(data.ninetyDaysDate) : null,
-                firstRechargeDate: data.firstRechargeDate ? new Date(data.firstRechargeDate) : null,
-            },
+            updatedData,
             { new: true }
         );
 
         res.json(updated);
 
     } catch (err) {
+        console.error("UPDATE ERROR:", err);
         res.status(500).json({ error: err.message });
     }
 });

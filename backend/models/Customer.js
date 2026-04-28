@@ -5,8 +5,10 @@ const customerSchema = new mongoose.Schema({
   address: String,
   mobile: String,
   altMobile: String,
-  company: String,
-
+  company: {
+    type: String,
+    enum: ["Airtel", "Jio", "Vi", "BSNL"]
+  },
   currentMonthDate: Date,
   nextMonthDate: Date,
   afterTwoMonthsDate: Date,
@@ -15,7 +17,7 @@ const customerSchema = new mongoose.Schema({
   firstRechargeDate: Date,
 
   pending: String,
-  extra1: String,
+  lastRechargePrice: String,
   extra2: String
 
 }, { timestamps: true });
