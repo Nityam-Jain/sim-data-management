@@ -12,8 +12,8 @@ function CustomerList() {
     // const [companyFilter, setCompanyFilter] = useState(""); // ✅ NEW
     const [editData, setEditData] = useState(null);
 
-    const API = "https://sim-data-management.onrender.com/api/customers";
-
+    // const API = "https://sim-data-management.onrender.com/api/customers";
+    const API = "http://localhost:5000/api/customers"
     const fetchAll = async () => {
         const res = await axios.get(API);
         setCustomers(res.data);
@@ -48,7 +48,7 @@ function CustomerList() {
     // 🔍 SEARCH + COMPANY FILTER
     const filteredCustomers = customers.filter((c) => {
         const searchText = search.toLowerCase();
-
+        const totalCustomers = customers.length;
         return (
             c.name?.toLowerCase().includes(searchText) ||
             c.mobile?.includes(search) ||
@@ -64,7 +64,7 @@ function CustomerList() {
 
     const handleUpdate = async () => {
 
-        console.log("SENDING DATA 👉", editData);
+        console.log("UPDATE DATA:", editData);
         const payload = {
             ...editData,
             currentMonthDate: editData.currentMonthDate || null,
@@ -85,7 +85,15 @@ function CustomerList() {
             <h3 style={{ textAlign: "center", marginBottom: 10 }}>
                 Customers
             </h3>
+            <div style={countCard}>
+                <h3 style={{ margin: 0 }}>
+                    👥 Total Customers: {customers.length}
+                </h3>
 
+                <p style={{ margin: "5px 0 0" }}>
+                    Showing: {filteredCustomers.length}
+                </p>
+            </div>
             {/* 🔍 SEARCH */}
             <input
                 placeholder="🔍 Search (name / mobile / 90 days date)"
@@ -160,6 +168,8 @@ function CustomerList() {
                                     firstRechargeDate: c.firstRechargeDate || "",
                                     pending: c.pending || "",
                                     lastRechargePrice: c.lastRechargePrice || "",
+                                    planDuration: c.planDuration || "",
+                                    expiryTime: c.expiryTime || "",
                                     extra2: c.extra2 || "",
                                     altMobile: c.altMobile || ""
                                 };
@@ -182,16 +192,20 @@ function CustomerList() {
                     <div>Current: {formatDate(c.currentMonthDate)}</div>
                     <div>Next: {formatDate(c.nextMonthDate)}</div>
                     <div>After 2: {formatDate(c.afterTwoMonthsDate)}</div>
-
+                    {/* 
                     <div>90 Days: {formatDate(c.ninetyDaysDate)}</div>
                     <div>Recharge: {formatDate(c.firstRechargeDate)}</div>
 
-                    <div>Pending: {c.pending || "-"}</div>
+                    <div>Pending: {c.pending || "-"}</div> */}
 
                     {/* ✅ FIXED */}
                     <div>Last Recharge ₹: {c.lastRechargePrice || "-"}</div>
 
-                    <div>Extra2: {c.extra2 || "-"}</div>
+                    <div>Plan Duration: {c.planDuration || "-"} Days</div>
+
+                    <div>Expiry Time (For Jio): {c.expiryTime || "-"}</div>
+
+                    <div>Extra: {c.extra2 || "-"}</div>
                     <div>Alt: {c.altMobile || "-"}</div>
                 </div>
             ))}
@@ -208,6 +222,7 @@ function CustomerList() {
                         <label>Mobile no.</label>
                         <input value={editData.mobile || ""} onChange={(e) => setEditData({ ...editData, mobile: e.target.value })} style={inputStyle} />
 
+                        <label>Address</label>
                         <input value={editData.address || ""} onChange={(e) => setEditData({ ...editData, address: e.target.value })} style={inputStyle} />
 
                         {/* OPTIONAL (kept same style) */}
@@ -226,27 +241,52 @@ function CustomerList() {
                             <option value="BSNL">BSNL</option>
                         </select>
 
-                        <label>Current</label>
+                        <label>Plan Expiry Date</label>
                         <input type="date" value={formatInputDate(editData.currentMonthDate)} onChange={(e) => setEditData({ ...editData, currentMonthDate: e.target.value })} style={inputStyle} />
 
-                        <label>Next</label>
+                        {/* <label>Next</label>
                         <input type="date" value={formatInputDate(editData.nextMonthDate)} onChange={(e) => setEditData({ ...editData, nextMonthDate: e.target.value })} style={inputStyle} />
 
                         <label>After 2</label>
-                        <input type="date" value={formatInputDate(editData.afterTwoMonthsDate)} onChange={(e) => setEditData({ ...editData, afterTwoMonthsDate: e.target.value })} style={inputStyle} />
+                        <input type="date" value={formatInputDate(editData.afterTwoMonthsDate)} onChange={(e) => setEditData({ ...editData, afterTwoMonthsDate: e.target.value })} style={inputStyle} /> */}
 
-                        <label>90 Days</label>
+                        {/* <label>90 Days</label>
                         <input type="date" value={formatInputDate(editData.ninetyDaysDate)} onChange={(e) => setEditData({ ...editData, ninetyDaysDate: e.target.value })} style={inputStyle} />
 
                         <label>Recharge</label>
                         <input type="date" value={formatInputDate(editData.firstRechargeDate)} onChange={(e) => setEditData({ ...editData, firstRechargeDate: e.target.value })} style={inputStyle} />
 
                         <label>Pending</label>
-                        <input value={editData.pending || ""} onChange={(e) => setEditData({ ...editData, pending: e.target.value })} style={inputStyle} />
+                        <input value={editData.pending || ""} onChange={(e) => setEditData({ ...editData, pending: e.target.value })} style={inputStyle} /> */}
 
                         {/* ✅ FIXED */}
                         <label>Last Recharge Price</label>
                         <input value={editData.lastRechargePrice || ""} onChange={(e) => setEditData({ ...editData, lastRechargePrice: e.target.value })} style={inputStyle} />
+
+                        <label>Plan Duration</label>
+                        <input
+                            value={editData.planDuration || ""}
+                            onChange={(e) =>
+                                setEditData({
+                                    ...editData,
+                                    planDuration: e.target.value
+                                })
+                            }
+                            style={inputStyle}
+                        />
+
+                        <label>Expiry Time (For Jio)</label>
+                        <input
+                            value={editData.expiryTime || ""}
+                            onChange={(e) =>
+                                setEditData({
+                                    ...editData,
+                                    expiryTime: e.target.value
+                                })
+                            }
+                            style={inputStyle}
+                        />
+
 
                         <label>Extra 2</label>
                         <input value={editData.extra2 || ""} onChange={(e) => setEditData({ ...editData, extra2: e.target.value })} style={inputStyle} />
@@ -334,6 +374,17 @@ const popupBox = {
     width: "95%",
     margin: "20px auto",
     borderRadius: 10
+};
+
+const countCard = {
+    background: "#1976d2",
+    color: "#fff",
+    padding: "12px",
+    borderRadius: "10px",
+    marginBottom: "15px",
+    textAlign: "center",
+    fontWeight: "bold",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.2)"
 };
 
 export default CustomerList;
