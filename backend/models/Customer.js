@@ -18,6 +18,9 @@ const customerSchema = new mongoose.Schema({
 
   pending: String,
   lastRechargePrice: String,
+
+  planDuration: String,
+  expiryTime: String,
   extra2: String
 
 }, { timestamps: true });

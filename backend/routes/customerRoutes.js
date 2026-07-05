@@ -2,73 +2,61 @@ const express = require("express");
 const router = express.Router();
 const Customer = require("../models/Customer");
 
-// // ================= ADD CUSTOMER =================
-// router.post("/add", async (req, res) => {
-//     try {
-//         const data = req.body;
-
-//         const customer = new Customer({
-//             name: data.name,
-//             address: data.address,
-//             mobile: data.mobile,
-//             altMobile: data.altMobile,
-//             company: data.company,
-
-//             currentMonthDate: data.currentMonthDate ? new Date(data.currentMonthDate) : null,
-//             nextMonthDate: data.nextMonthDate ? new Date(data.nextMonthDate) : null,
-//             afterTwoMonthsDate: data.afterTwoMonthsDate ? new Date(data.afterTwoMonthsDate) : null,
-
-//             pending: data.pending,
-//             extra1: data.extra1,
-//             extra2: data.extra2
-//         });
-
-//         await customer.save();
-
-//         res.json({ message: "Customer Added", customer });
-
-//     } catch (err) {
-//         console.error("ADD ERROR:", err);
-//         res.status(500).json({ error: err.message });
-//     }
-// });
-
-
-// // ================= GET ALL =================
-// router.get("/", async (req, res) => {
-//     try {
-//         const customers = await Customer.find().sort({ createdAt: -1 }); // latest first
-//         res.json(customers);
-//     } catch (err) {
-//         console.error("GET ERROR:", err);
-//         res.status(500).json({ error: err.message });
-//     }
-// });
-
-
-
-// ADD
+console.log(Customer.schema.obj);
 // ================= ADD =================
 router.post("/add", async (req, res) => {
     try {
+        // console.log(req.body);
+
         const data = req.body;
 
-        const customer = new Customer({
-            ...data,
+        // const customer = new Customer({
+        //     ...data,
 
-            currentMonthDate: data.currentMonthDate ? new Date(data.currentMonthDate) : null,
-            nextMonthDate: data.nextMonthDate ? new Date(data.nextMonthDate) : null,
-            afterTwoMonthsDate: data.afterTwoMonthsDate ? new Date(data.afterTwoMonthsDate) : null,
+        //     currentMonthDate: data.currentMonthDate ? new Date(data.currentMonthDate) : null,
+        //     nextMonthDate: data.nextMonthDate ? new Date(data.nextMonthDate) : null,
+        //     afterTwoMonthsDate: data.afterTwoMonthsDate ? new Date(data.afterTwoMonthsDate) : null,
 
-            ninetyDaysDate: data.ninetyDaysDate ? new Date(data.ninetyDaysDate) : null,
-            firstRechargeDate: data.firstRechargeDate ? new Date(data.firstRechargeDate) : null,
+        //     ninetyDaysDate: data.ninetyDaysDate ? new Date(data.ninetyDaysDate) : null,
+        //     firstRechargeDate: data.firstRechargeDate ? new Date(data.firstRechargeDate) : null,
 
-            // ✅ FIXED (price, not date)
-            lastRechargePrice: data.lastRechargePrice || "",
+        //     // ✅ FIXED (price, not date)
+        //     lastRechargePrice: data.lastRechargePrice || "",
 
-        });
+        //     // planDuration: data.planDuration || "",
+        //     // expiryTime: data.expiryTime || "",
 
+        //     planDuration: "TEST123",
+        //     expiryTime: "HELLO",
+
+        // });
+        const customer = new Customer(data);
+
+        customer.currentMonthDate = data.currentMonthDate
+            ? new Date(data.currentMonthDate)
+            : null;
+
+        customer.nextMonthDate = data.nextMonthDate
+            ? new Date(data.nextMonthDate)
+            : null;
+
+        customer.afterTwoMonthsDate = data.afterTwoMonthsDate
+            ? new Date(data.afterTwoMonthsDate)
+            : null;
+
+        customer.ninetyDaysDate = data.ninetyDaysDate
+            ? new Date(data.ninetyDaysDate)
+            : null;
+
+        customer.firstRechargeDate = data.firstRechargeDate
+            ? new Date(data.firstRechargeDate)
+            : null;
+        // console.log(customer);
+        // console.log("Customer before save:");
+        // console.log(customer.toObject());
         await customer.save();
+        // console.log("Saved customer:");
+        // console.log(customer.toObject());
         res.json(customer);
 
     } catch (err) {
@@ -81,6 +69,8 @@ router.post("/add", async (req, res) => {
 // ================= UPDATE =================
 router.put("/update/:id", async (req, res) => {
     try {
+        console.log("UPDATE BODY:", req.body);
+
         const data = req.body;
 
         const updatedData = {
@@ -99,6 +89,9 @@ router.put("/update/:id", async (req, res) => {
 
             pending: data.pending || "",
             lastRechargePrice: data.lastRechargePrice || "",
+
+            planDuration: data.planDuration || "",
+            expiryTime: data.expiryTime || "",
             extra2: data.extra2 || ""
         };
 
