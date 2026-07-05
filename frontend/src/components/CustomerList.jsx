@@ -12,8 +12,8 @@ function CustomerList() {
     // const [companyFilter, setCompanyFilter] = useState(""); // ✅ NEW
     const [editData, setEditData] = useState(null);
 
-    // const API = "https://sim-data-management.onrender.com/api/customers";
-    const API = "http://localhost:5000/api/customers"
+    const API = "https://sim-data-management.onrender.com/api/customers";
+    // const API = "http://localhost:5000/api/customers"
     const fetchAll = async () => {
         const res = await axios.get(API);
         setCustomers(res.data);
@@ -45,10 +45,10 @@ function CustomerList() {
         return new Date(d).toISOString().split("T")[0];
     };
 
+    const totalCustomers = customers.length;
     // 🔍 SEARCH + COMPANY FILTER
     const filteredCustomers = customers.filter((c) => {
         const searchText = search.toLowerCase();
-        const totalCustomers = customers.length;
         return (
             c.name?.toLowerCase().includes(searchText) ||
             c.mobile?.includes(search) ||
@@ -87,7 +87,7 @@ function CustomerList() {
             </h3>
             <div style={countCard}>
                 <h3 style={{ margin: 0 }}>
-                    👥 Total Customers: {customers.length}
+                    👥 Total Customers: {totalCustomers}
                 </h3>
 
                 <p style={{ margin: "5px 0 0" }}>

@@ -43,8 +43,8 @@ function AddCustomer() {
     }
 
     await axios.post(
-      // "https://sim-data-management.onrender.com/api/customers/add",
-      "http://localhost:5000/api/customers/add",
+      "https://sim-data-management.onrender.com/api/customers/add",
+      // "http://localhost:5000/api/customers/add",
       form
     );
 
